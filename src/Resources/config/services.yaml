@@ -1,0 +1,5 @@
+services:
+    PrBundle\SymfonyBundle\Serializer\Normalizer\Normalizer:
+        arguments: []
+        tags:
+            - { name: serializer.normalizer }
