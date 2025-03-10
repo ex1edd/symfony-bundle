@@ -81,3 +81,16 @@ $normalizedData = $normalizer->normalize($object);
     SymfonyBundle.php - главный файл бандла
 /composer.json
 ```
+
+После того как вы установите бандл с помощью Composer, он будет находиться в папке vendor/prbundle/symfonybundle/
+
+```
+/some-project
+    /bin
+    /config
+    ...
+    /vendor
+        prbundle/symfonybundle/ - папка с бандлом
+```
+
+
