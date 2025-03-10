@@ -18,7 +18,9 @@
 composer require prbundle/symfony-bundle
 ```
 
-## Активация
+После того как вы выполнили команду composer require, composer автоматически загрузит и установит все необходимые зависимости, включая бандл.
+
+## Подключение бандла в Symfony
 
 Для Symfony 4 и выше бандл будет автоматически активирован после установки через Composer. Вам не нужно ничего дополнительно настраивать.
 
@@ -33,42 +35,49 @@ return [
 ];
 ```
 
-## Настройка
+### Для старых версий Symfony
 
-Вы можете настроить сервисы и нормализаторы через конфигурационный файл `services.yaml`.
+Вам может понадобиться вручную зарегистрировать бандл в app/AppKernel.php (вместо config/bundles.php):
 
-Пример настройки нормализатора:
+```php
+// app/AppKernel.php
 
-```yaml
-# config/services.yaml
+public function registerBundles()
+{
+    $bundles = [
+        // другие бандлы
+        new PrBundle\SymfonyBundle\PrSymfonyBundle(),
+    ];
 
-services:
-    PrBundle\SymfonyBundle\Serializer\Normalizer\Normalizer:
-        tags:
-            - { name: 'serializer.normalizer' }
+    return $bundles;
+}
 ```
 
-Нормализатор автоматически будет обрабатывать даты и другие типы данных в объекте, в зависимости от настроек. Вы можете добавить дополнительные параметры, если это необходимо::
-```yaml
+## Использование бандла
 
-# config/services.yaml
+Пример использования
 
-parameters:
-    pr_bundle.some_parameter: 'value'
+```
+use App\Serializer\Normalizer\Normalizer;
+
+$normalizer = new Normalizer();
+
+// Пример использования normalize
+$normalizedData = $normalizer->normalize($object);
 ```
 
 ## Структура проекта
-
+Файловая структура выглядит следующим образом:
 ```
 /src
     /DependencyInjection
-        BundleExtension.php
+        BundleExtension.php - файл для регистрации зависимостей
     /Resources
         /config
-            services.yaml
+            services.yaml - регистрация сервисов
     /Serializer
 	/Normalizer
-	    Normalizer.php
-    SymfonyBundle.php
+	    Normalizer.php - нормалайзер, необходимый в проекте
+    SymfonyBundle.php - главный файл бандла
 /composer.json
 ```
