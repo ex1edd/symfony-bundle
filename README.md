@@ -2,6 +2,31 @@
 
 `SymfonyBundle` — это Symfony бандл, предоставляющий кастомный нормализатор для работы с объектами
 
+## Процесс разработки
+
+Ниже будут описаны все этапы разработки пакета
+
+### 1. Создание директории
+
+```bash
+mkdir symfony-bundle
+cd symfony-bundle
+```
+
+### 2. Инициализация composer
+
+```bash
+composer init
+```
+
+На этом этапе задаем данные нашего пакета: name; description; author; minimum stability (допустимые версии, используемые при разработке); package type (мы выбираем symfony-bundle, чтобы symfony автоматически подключался к нашему пакету); license.
+
+### 3. Создание файловой структуры
+
+```bash
+mkdir -p src/DependencyInjection src/Serializer/Normalizer src/Resources/config
+```
+
 ## Требования
 
 - PHP >= 8.0
