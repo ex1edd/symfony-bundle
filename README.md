@@ -27,6 +27,117 @@ composer init
 mkdir -p src/DependencyInjection src/Serializer/Normalizer src/Resources/config
 ```
 
+Создаются папки DependencyInjection (для конфигурации бандла и регистрации сервисов); Normalizer (папка, в которой содержится сам нормализатор); config (в ней будет находиться services.yaml, в котором содержится настройка сервисов, параметров и маршрутов).
+
+### 4. Создание основного класса бандла
+
+Создаем файл с классом
+
+```bash
+touch src/SymfonyBundle.php
+```
+
+Создаем внутри него сам класс
+
+```
+<?php
+
+namespace PrBundle\SymfonyBundle;
+
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use PrBundle\SymfonyBundle\DependencyInjection\MyBundleExtension;
+
+class PrSymfonyBundle extends Bundle
+{
+    public function getContainerExtension(): ?ExtensionInterface
+    {
+        return new MyBundleExtension();
+    }
+}
+```
+
+### 5. Создание файла расширений
+
+Этот файл будет нужен для конфигурации бандла и регистрации сервисов
+
+```bash
+touch src/DependencyInjection/PrBundleExtension.php
+```
+
+Содержание самого файла: 
+
+```
+<?php
+
+namespace PrBundle\SymfonyBundle\DependencyInjection;
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+class MyBundleExtension extends Extension
+{
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.yaml');
+    }
+}
+```
+
+Он загружает services.yaml из Resources/config и регистрирует сервисы в контейнере Symfony.
+
+### 6. Создание конфигурационного файла сервисов
+
+Теперь создаем этот файл services.yaml: 
+
+```bash
+touch src/Resources/config/services.yaml
+```
+
+Файл предназначен для регистрации нормалайзера как сервиса и добавления его в serializer Symfony
+
+```
+services:
+    PrBundle\SymfonyBundle\Serializer\Normalizer\Normalizer:
+        tags: ['serializer.normalizer']
+```
+
+Таким образом нормализатор интегрируется в общую систему Symfony Serializer и будет использоваться вместе с остальными как один контейнер.
+
+### 7. Добавление нормализатора
+
+Теперь создаем файл с нормализатором, который будет использоваться в проекте
+
+Создаем файл Normalizer.php
+
+```bash
+touch src/Serializer/Normalizer/Normalizer.php
+```
+
+В нем будет содержаться код кастомного нормалайзера.
+
+### 8. Создание репозитория на GitHub
+
+Далее, для публикации пакета, необходимо загрузить его на GitHub
+
+```bash
+git init - создание локального репозитория Git в текущей директории
+git add . - подготовка всех файлов текущей директории к коммиту
+git commit -m "Initial commit" - создание первого коммита
+git remote add origin https://github.com/ex1edd/symfony-bundle.git - подключение удаленного репозитория
+git push -u origin main - отправка закоммиченных файлов в репозиторий GitHub
+```
+
+### 9. Публикация на Packagist
+
+Теперь переходим на packagist.org и публикуем репозиторий с GitHub
+
+После этого бандл будет готов к установке через Composer.
+
 ## Требования
 
 - PHP >= 8.0
